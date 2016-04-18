@@ -2,25 +2,28 @@
 <html>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <body>
+<h1>Quinn's Fish Tank</h1>
     <span id="temp">Waiting for data...</span><br>
     <span id="tstamp"></span><br>
 
     <script type="text/javascript">
 
-      window.setInterval(function() {
+        function getTemp() {
+              var deviceID = "42003a001747343338333633";
+                    var accessToken = "a76c0ebb5a85bfd4196558967995e80183a6198b";
+                    var varName = "temperatureF";
 
+                    requestURL = "https://api.spark.io/v1/devices/" + deviceID + "/" + varName + "/?access_token=" + accessToken;
+                    $.getJSON(requestURL, function(json) {
+                             document.getElementById("temp").innerHTML = Math.round(json.result*100)/100 + "&deg; F";
+                             document.getElementById("temp").style.fontSize = "58px";
+                             document.getElementById("tstamp").innerHTML = json.coreInfo.last_heard;
+                             });
 
-        var deviceID = "42003a001747343338333633";
-        var accessToken = "a76c0ebb5a85bfd4196558967995e80183a6198b";
-        var varName = "temperatureF";
+        }
 
-        requestURL = "https://api.spark.io/v1/devices/" + deviceID + "/" + varName + "/?access_token=" + accessToken;
-        $.getJSON(requestURL, function(json) {
-                 document.getElementById("temp").innerHTML = json.result + "&deg; F";
-                 document.getElementById("temp").style.fontSize = "28px";
-                 document.getElementById("tstamp").innerHTML = json.coreInfo.last_heard;
-                 });
-    }, 30000);
+      getTemp();
+      window.setInterval(getTemp, 10000);
     </script>
 </body>
 </html>
